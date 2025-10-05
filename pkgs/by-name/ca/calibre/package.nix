@@ -34,8 +34,9 @@
   popplerSupport ? true,
   speechSupport ? true,
   unrarSupport ? false,
-}:
-
+}: let
+  piper-minimal =  piper-tts.override {withTrain = false;};
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "calibre";
   version = "8.10.0";
@@ -148,7 +149,7 @@ stdenv.mkDerivation (finalAttrs: {
           ]
       ++ lib.optional unrarSupport unrardll
     ))
-    piper-tts
+    piper-minimal
     xdg-utils
   ]
   ++ lib.optional speechSupport speechd-minimal;
@@ -167,7 +168,7 @@ stdenv.mkDerivation (finalAttrs: {
     export PODOFO_LIB_DIR=${podofo_0_10}/lib
     export XDG_DATA_HOME=$out/share
     export XDG_UTILS_INSTALL_MODE="user"
-    export PIPER_TTS_DIR=${piper-tts}/bin
+    export PIPER_TTS_DIR=${piper-minimal}/bin
 
     python setup.py install --root=$out \
       --prefix=$out \
